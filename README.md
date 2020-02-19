@@ -39,29 +39,28 @@ Setup database with:
 
 ### Console Testing
 
-101 users are setup in seeds
+Desired SQL for getting requestors from inverse_friendship:
 
 ```
-users = User.all
-u1 = users[0]
+SELECT users.* FROM users 
+INNER JOIN inverse_friendship ON inverse_friendship.friend_id = user.id
+WHERE inverse_frienships.accepted = true/false
+AND user.id = ?;
+```
 
-# u1 initiates friendship requests for users with ids 5 to 10: Correct
-(5..10).each { |i| u1.friendships.create(friend: User.find(i)) }
-
-# users with ids 11 to 15 initiate friend request to u1
-(11..15).each { |i| User.find(i).friendships.create(friend: u1) }
-
-u1.all_friends # -> []
-
-u1.pending_requests_own # returns users with pending requests from u1
-
-u1.pending_requests_others # WRONG: returns friendship requests rather than users
-
-# confirm a subset of friendship requests
-(9..10).each { |i| User.find(i).confirm_friendship(u1) }
-(12..15).each { |i| u1.confirm_friendship(User.find(i)) }
+code used:
 
 ```
+User.find(:id).inverse_friendships.includes(:creator).where('accepted = ?', true).map {|u| u.creator}
+```
+
+The above code executes three queries
+
+1. Find the user
+2. Get all their accepted friendships, which were created by others
+3. Get all the creators of those friendship requests
+
+Goal: To reduce this to 1 SQL query.
 
 ### Usage
 
