@@ -32,6 +32,14 @@ class User < ApplicationRecord
     friends.where('accepted = ?', false)
   end
 
+  def request_pending?(user)
+    friends.where('accepted = ?', false).exists?(user.id)
+  end
+
+  def friendship_with(user)
+    friendships.find_by(friend_id: user.id) || inverse_friendships.find_by(creator_id: user.id)
+  end
+
   def pending_requests_others
     inverse_friendships.
       includes(:creator).

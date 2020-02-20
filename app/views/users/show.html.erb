@@ -1,6 +1,10 @@
 <section class="user-section">
   <h2><%= "Name: #{@user.name}" %></h2>
-  <small><%= pluralize(@friends.count, 'friend') %></small>
+  <small><%= link_to pluralize(@total_friends, 'friend'), friends_user_path(@user) %></small>
+  <% if current_user == @user %>
+  <br><small><%= link_to "Pending requests", received_friendships_user_path(@user) %></small>
+  <br><small><%= link_to "Awaiting response", sent_friendships_user_path(@user) %></small>
+  <% end %>
   <article class="timeline">
     <h3>Recent posts:</h3>
     <ul class="posts">
