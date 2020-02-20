@@ -37,30 +37,10 @@ Setup database with:
    rails db:migrate
 ```
 
-### Console Testing
-
-Desired SQL for getting requestors from inverse_friendship:
-
+Seed database with:
 ```
-SELECT users.* FROM users 
-INNER JOIN inverse_friendship ON inverse_friendship.friend_id = user.id
-WHERE inverse_frienships.accepted = true/false
-AND user.id = ?;
+   rails db:seed
 ```
-
-code used:
-
-```
-User.find(:id).inverse_friendships.includes(:creator).where('accepted = ?', true).map {|u| u.creator}
-```
-
-The above code executes three queries
-
-1. Find the user
-2. Get all their accepted friendships, which were created by others
-3. Get all the creators of those friendship requests
-
-Goal: To reduce this to 1 SQL query.
 
 ### Usage
 
@@ -72,13 +52,17 @@ Start server with:
 
 Open `http://localhost:3000/` in your browser.
 
+In order to play around with seeded data:
+
+- Login using credentials: _email_: **u0@m.c**; _password_: **foobar**
+- Navigate to **index** (from page header) to see all users, and available actions
+- Navigate to **profile** (from page header) to see friends, pending friend requests, and other users from whom you are awaiting response.
+
 ### Run tests
 
 ```
-    rpsec --format documentation
+    rpsec
 ```
-
-> Tests will be added by Microverse students. There are no tests for initial features in order to make sure that students write all tests from scratch.
 
 ### Deployment
 
@@ -106,3 +90,27 @@ I thank [Microverse](https://github.com/microverseinc) for providing the starter
 
 TBA
 
+### Notes
+
+Desired SQL for getting requestors from inverse_friendship:
+
+```
+SELECT users.* FROM users 
+INNER JOIN inverse_friendship ON inverse_friendship.friend_id = user.id
+WHERE inverse_frienships.accepted = true/false
+AND user.id = ?;
+```
+
+code used:
+
+```
+User.find(:id).inverse_friendships.includes(:creator).where('accepted = ?', true).map {|u| u.creator}
+```
+
+The above code executes three queries
+
+1. Find the user
+2. Get all their accepted friendships, which were created by others
+3. Get all the creators of those friendship requests
+
+Goal: To reduce this to 1 SQL query.
