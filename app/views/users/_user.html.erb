@@ -1,14 +1,4 @@
 <li>
   <%= link_to user.name, user %>
-  <% unless current_user == user %>
-    <div>
-      <% if current_user.friend?(user) || current_user.request_pending?(user) %>
-        <%= render partial: 'unfriend', locals: { user: user } %>
-      <% elsif user.request_pending?(current_user) %>
-        <%= render partial: 'accept', locals: { user: user } %>
-      <% else %>
-        <%= render partial: 'friend', locals: { user: user } %>
-      <% end %>
-    </div>
-  <% end %>
+  <%= render partial: 'friendships/friendship_form', locals: { user: user } %>
 </li>
