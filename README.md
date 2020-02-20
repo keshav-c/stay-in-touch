@@ -86,7 +86,7 @@ TBA
 
 ## Authors
 
-TBA
+- Keshav Chakravarthy
 
 ## 🤝 Contributing
 
@@ -100,7 +100,7 @@ Give a ⭐️ if you like this project!
 
 ## Acknowledgments
 
-TBA
+I thank [Microverse](https://github.com/microverseinc) for providing the starter code for this project. 
 
 ## 📝 License
 
