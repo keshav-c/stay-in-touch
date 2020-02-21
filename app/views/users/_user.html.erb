@@ -1,4 +1,4 @@
-<li>
+<li id="<%= user.name.gsub(' ','_') %>">
   <%= link_to user.name, user %>
   <%= render partial: 'friendships/friendship_form', locals: { user: user } %>
 </li>

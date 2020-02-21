@@ -4,13 +4,13 @@ class FriendshipsController < ApplicationController
   def create
     user = User.find(params[:friend_id])
     current_user.friends << user
-    redirect_back(fallback_location: root_path)
+    redirect_back(fallback_location: root_path, notice: 'Friendship request sent.')
   end
 
   def update
     user = Friendship.find(params[:id]).creator
     current_user.confirm_friendship(user)
-    redirect_back(fallback_location: root_path)
+    redirect_back(fallback_location: root_path, notice: "#{user.name} added as friend")
   end
 
   def destroy
@@ -20,6 +20,6 @@ class FriendshipsController < ApplicationController
     else
       current_user.inverse_friendships.delete(joining_friendship)
     end
-    redirect_back(fallback_location: root_path)
+    redirect_back(fallback_location: root_path, notice: 'Unfriend successful')
   end
 end
