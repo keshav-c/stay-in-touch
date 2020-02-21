@@ -8,14 +8,14 @@ class Friendship < ApplicationRecord
   validate :friend_exists, on: :create
 
   def creator_exists
-    unless User.exists?(email: creator.email)
-      errors.add(:creator, "can only be created by registered user")
-    end
+    return if User.exists?(email: creator.email)
+
+    errors.add(:creator, 'can only be created by registered user')
   end
 
   def friend_exists
-    unless User.exists?(email: friend.email)
-      errors.add(:friend, "can only be sent to registered user")
-    end
+    return if User.exists?(email: friend.email)
+
+    errors.add(:friend, 'can only be sent to registered user')
   end
 end
