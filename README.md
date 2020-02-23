@@ -114,3 +114,7 @@ The above code executes three queries
 3. Get all the creators of those friendship requests
 
 Goal: To reduce this to 1 SQL query.
+
+### Changelog
+
+ERD was changed to reflect changes in Friendship design and implementation
