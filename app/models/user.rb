@@ -14,18 +14,9 @@ class User < ApplicationRecord
            foreign_key: 'creator_id',
            dependent: :destroy
   has_many :friends, through: :friendships
-  has_many :inverse_friendships,
-           class_name: 'Friendship',
-           foreign_key: 'friend_id',
-           dependent: :destroy
 
   def all_friends
-    initiated_request = friends.where('accepted = ?', true)
-    recieved_request = inverse_friendships
-      .includes(:creator)
-      .where('accepted = ?', true)
-      .map(&:creator)
-    (initiated_request + recieved_request).uniq
+    friends.where('accepted = ?', true)
   end
 
   def pending_requests_own
@@ -37,24 +28,22 @@ class User < ApplicationRecord
   end
 
   def friendship_with(user)
-    friendships.find_by(friend_id: user.id) || inverse_friendships.find_by(creator_id: user.id)
+    friendships.find_by(friend_id: user.id) || user.friendships.find_by(friend_id: id)
   end
 
   def pending_requests_others
-    inverse_friendships
+    Friendship
       .includes(:creator)
-      .where('accepted = ?', false)
+      .where('friend_id = ? AND accepted = ?', id, false)
       .map(&:creator)
   end
 
   def confirm_friendship(user)
-    friendship_request = inverse_friendships.find_by(creator_id: user.id)
-    friendship_request.update_attribute(:accepted, true)
+    friendship_request = user.friendships.find_by(friend_id: id)
+    friendship_request&.update_attribute(:accepted, true)
   end
 
   def friend?(user)
-    return true if friends.where('accepted = ?', true).exists?(user.id)
-
-    inverse_friendships.where(creator: user, accepted: true).exists?
+    friends.where('accepted = ?', true).exists?(user.id)
   end
 end

@@ -8,18 +8,14 @@ class FriendshipsController < ApplicationController
   end
 
   def update
-    user = Friendship.find(params[:id]).creator
+    user = Friendship.includes(:creator).find(params[:id]).creator
     current_user.confirm_friendship(user)
     redirect_back(fallback_location: root_path, notice: "#{user.name} added as friend")
   end
 
   def destroy
-    joining_friendship = Friendship.find(params[:id])
-    if current_user == joining_friendship.creator
-      current_user.friendships.delete(joining_friendship)
-    else
-      current_user.inverse_friendships.delete(joining_friendship)
-    end
+    relation = Friendship.find(params[:id])
+    relation.destroy
     redirect_back(fallback_location: root_path, notice: 'Unfriend successful')
   end
 end
