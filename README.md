@@ -33,21 +33,21 @@ bundle install
 Setup database with:
 
 ```
-   rails db:create
-   rails db:migrate
+rails db:create
+rails db:migrate
 ```
 
 Seed database with:
 ```
-   rails db:seed
+rails db:seed
 ```
 
-### Usage
+## Usage
 
 Start server with:
 
 ```
-    rails server
+rails server
 ```
 
 Open `http://localhost:3000/` in your browser.
@@ -61,8 +61,33 @@ In order to play around with seeded data:
 ### Run tests
 
 ```
-    rpsec
+rpsec
 ```
+
+### The Lifecycle of a Friendship record
+
+- **Friendship table**
+
+| creator_id  | friend_id | Accepted |
+| ------------- | ------------- | ------------- |
+
+- **On `User 1` sending a friend request to `User 2`**
+
+| creator_id  | friend_id | Accepted |
+| ------------- | ------------- | ------------- |
+| 1  | 2  | False |
+
+- **On `User 2` accepting the friend request sent by `User 1`**
+
+| creator_id  | friend_id | Accepted |
+| ------------- | ------------- | ------------- |
+| 1  | 2  | True |
+| 2  | 1  | True |
+
+- **On either `User 1` or `User 2` unfriending the other**
+
+| creator_id  | friend_id | Accepted |
+| ------------- | ------------- | ------------- |
 
 ### Deployment
 
@@ -90,31 +115,6 @@ I thank [Microverse](https://github.com/microverseinc) for providing the starter
 
 TBA
 
-### Notes
+### Future Improvements
 
-Desired SQL for getting requestors from inverse_friendship:
-
-```
-SELECT users.* FROM users 
-INNER JOIN inverse_friendship ON inverse_friendship.friend_id = user.id
-WHERE inverse_frienships.accepted = true/false
-AND user.id = ?;
-```
-
-code used:
-
-```
-User.find(:id).inverse_friendships.includes(:creator).where('accepted = ?', true).map {|u| u.creator}
-```
-
-The above code executes three queries
-
-1. Find the user
-2. Get all their accepted friendships, which were created by others
-3. Get all the creators of those friendship requests
-
-Goal: To reduce this to 1 SQL query.
-
-### Changelog
-
-ERD was changed to reflect changes in Friendship design and implementation
+- To minimize SQL queries executed on the database to improve performance.
