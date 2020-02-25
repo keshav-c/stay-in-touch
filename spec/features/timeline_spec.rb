@@ -16,33 +16,16 @@ RSpec.feature 'Timelines', type: :feature do
       @posts << @u3.posts.create(content: "Message number #{p + 1} by #{@u3.name}",
                                  created_at: (p * 3 + 3).hours.ago)
     end
-  end
-
-  scenario 'current user\'s timeline has only their posts and their friends\' posts' do
     visit new_user_session_path
     fill_in 'Email', with: @u1.email
     fill_in 'Password', with: @u1.password
     click_button 'Log in'
     click_link 'Timeline'
-    @u1.posts.each do |post|
-      expect(page).to have_selector("#post-#{post.id}")
-    end
-    @u2.posts.each do |post|
-      expect(page).to have_selector("#post-#{post.id}")
-    end
-    @u3.posts.each do |post|
-      expect(page).to_not have_selector("#post-#{post.id}")
-    end
-    click_link 'Sign out'
-    fill_in 'Email', with: @u2.email
-    fill_in 'Password', with: @u2.password
-    click_button 'Log in'
-    click_link 'Timeline'
-    @u1.posts.each do |post|
-      expect(page).to have_selector("#post-#{post.id}")
-    end
-    @u2.posts.each do |post|
-      expect(page).to have_selector("#post-#{post.id}")
+  end
+
+  scenario 'current user\'s timeline has only their posts and their friends\' posts' do
+    [@u1, @u2].each do |user|
+      user.posts.each { |post| expect(page).to have_selector("#post-#{post.id}") }
     end
     @u3.posts.each do |post|
       expect(page).to_not have_selector("#post-#{post.id}")
@@ -52,11 +35,8 @@ RSpec.feature 'Timelines', type: :feature do
     fill_in 'Password', with: @u3.password
     click_button 'Log in'
     click_link 'Timeline'
-    @u1.posts.each do |post|
-      expect(page).to_not have_selector("#post-#{post.id}")
-    end
-    @u2.posts.each do |post|
-      expect(page).to_not have_selector("#post-#{post.id}")
+    [@u1, @u2].each do |user|
+      user.posts.each { |post| expect(page).to_not have_selector("#post-#{post.id}") }
     end
     @u3.posts.each do |post|
       expect(page).to have_selector("#post-#{post.id}")
@@ -64,11 +44,6 @@ RSpec.feature 'Timelines', type: :feature do
   end
 
   scenario 'timeline posts are in descending order of creation (oldest first)' do
-    visit new_user_session_path
-    fill_in 'Email', with: @u1.email
-    fill_in 'Password', with: @u1.password
-    click_button 'Log in'
-    click_link 'Timeline'
     expect(page.find('li:nth-child(1)')).to have_selector("#post-#{@posts[0].id}")
     expect(page.find('li:nth-child(2)')).to have_selector("#post-#{@posts[1].id}")
     expect(page.find('li:nth-child(3)')).to have_selector("#post-#{@posts[3].id}")
@@ -80,14 +55,5 @@ RSpec.feature 'Timelines', type: :feature do
     click_link 'Timeline'
     expect(page.find('li:nth-child(1)')).to have_selector("#post-#{@posts[2].id}")
     expect(page.find('li:nth-child(2)')).to have_selector("#post-#{@posts[5].id}")
-    click_link 'Sign out'
-    fill_in 'Email', with: @u2.email
-    fill_in 'Password', with: @u1.password
-    click_button 'Log in'
-    click_link 'Timeline'
-    expect(page.find('li:nth-child(1)')).to have_selector("#post-#{@posts[0].id}")
-    expect(page.find('li:nth-child(2)')).to have_selector("#post-#{@posts[1].id}")
-    expect(page.find('li:nth-child(3)')).to have_selector("#post-#{@posts[3].id}")
-    expect(page.find('li:nth-child(4)')).to have_selector("#post-#{@posts[4].id}")
   end
 end
