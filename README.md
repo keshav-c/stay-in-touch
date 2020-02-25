@@ -91,7 +91,7 @@ rpsec
 
 ### Deployment
 
-TBA
+Now deploying to Heroku from feature branch
 
 ## Authors
 
@@ -118,3 +118,4 @@ TBA
 ### Future Improvements
 
 - To minimize SQL queries executed on the database to improve performance.
+- Notifications
