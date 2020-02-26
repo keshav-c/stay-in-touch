@@ -1,6 +1,8 @@
-# Scaffold for social media app with Ruby on Rails
+# A social media app with Ruby on Rails
 
-> This repo includes intial code for social media app with basic styling. Its purpose is to be a starting point for Microverse students.
+On a starter code base, for a Facebook like social media app, with Users,
+Posts, Comments and Likes, I implemented a Friendship feature along with
+a Timeline that shows posts of connected users.
 
 ## Built With
 
@@ -9,7 +11,7 @@
 
 ## Live Demo
 
-TBA
+A live version of this app is hosted [here](https://immense-wave-08656.herokuapp.com/)
 
 
 ## Getting Started
@@ -88,10 +90,6 @@ rpsec
 
 | creator_id  | friend_id | Accepted |
 | ------------- | ------------- | ------------- |
-
-### Deployment
-
-A live version of this app is hosted [here](https://immense-wave-08656.herokuapp.com/)
 
 ## Authors
 
